@@ -8,16 +8,33 @@ import {
   showLoading
 } from "../HOC/LoadingProvider/LoadingProvider"
 
+
+/**
+ * useQuote - Hook for fetching Quote data
+ */
 export const useQuote = () => {
+ 
   const [data, setData] = useState<QuoteResponseType | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(null)
 
+  /**
+   * Reset Quote state
+   */
   const reset = () => {
     setData(null)
     setLoading(false)
     setError(false)
   }
+
+  /**
+   * 
+   * @param from Currency to exchange from 
+   * @param to Currency to exchange to
+   * @param amount Amount to exchange
+   * @param cb Callback function after fetch quote
+   * @param onError  Error function to handle fetch error
+   */
   const quickQuote = async (
     from: CurrencyType | null,
     to: CurrencyType | null,

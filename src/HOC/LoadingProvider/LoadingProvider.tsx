@@ -1,5 +1,5 @@
 import React from "react"
-import WarningManager from "./LoadingManager"
+import LoadingManager from "./LoadingManager"
 import Modal from "react-modal"
 import { StyleSheet } from "../../../types"
 import { ReactComponent as Logo } from "../../assets/svg/logo.svg"
@@ -10,7 +10,7 @@ Modal.setAppElement("#root")
 
 export interface LoadingProps {
   /**
-   * @param content Overlay Content to display
+   * @param content Default Content to display
    */
   content: JSX.Element | null
   /**
@@ -19,6 +19,12 @@ export interface LoadingProps {
   modalProps?: Partial<Modal.Props>
 }
 
+/**
+ * @showModal Value to decide modal show or hide
+ * @content Custom loading content
+ * @label Custom label under content or logo
+ * @modalProps Props for Modal component
+ */
 export interface LoadingState {
   showModal: boolean
   content?: JSX.Element | null
@@ -26,20 +32,32 @@ export interface LoadingState {
   modalProps?: Partial<Modal.Props> | null
 }
 
+/**
+ * Function to show current modal
+ * @param args Args pass to showModal function,please refs to showModal function
+ * @param cb Callback function pass to showModal
+ */
 export function showLoading(args?: Partial<LoadingState>, cb?: () => void) {
-  const ref = WarningManager.getDefault()
+  const ref = LoadingManager.getDefault()
   if (!!ref) {
     ;(ref as any)?.showModal(args ? args : null, cb)
   }
 }
 
+/**
+ * Function to hide current modal
+ * @param cb Callback function pass to showModal
+ */
 export function hideLoading(cb?: () => void) {
-  const ref = WarningManager.getDefault()
+  const ref = LoadingManager.getDefault()
   if (!!ref) {
     ;(ref as any)?.hideModal(cb)
   }
 }
 
+/**
+ * Generate random id 
+ */
 function srid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -91,19 +109,30 @@ export default class LoadingProvider extends React.Component<
     }
   }
 
+  /**
+   * Bind this provider component to loading manager
+   */
   componentDidMount() {
     //@ts-ignore
     if (this.props.canRegisterAsDefault) {
-      WarningManager.register(this)
+      LoadingManager.register(this)
     }
   }
+  /**
+   * Unbind this provider component to loading manager
+   */
   componentWillUnmount() {
     //@ts-ignore
     if (this.props.canRegisterAsDefault) {
-      WarningManager.unregister(this)
+      LoadingManager.unregister(this)
     }
   }
 
+  /**
+   * Function to show modal
+   * @param args Args to custom content,label or modal Props
+   * @param cb Callback function after modal has shown
+   */
   showModal(args?: Partial<LoadingState>, cb?: () => void) {
     this.setState(
       {
@@ -115,6 +144,10 @@ export default class LoadingProvider extends React.Component<
     )
   }
 
+  /**
+   * Function to hide modal
+   * @param cb Callback function after modal has hidden
+   */
   hideModal(cb?: () => void) {
     this.setState(
       {
@@ -122,6 +155,9 @@ export default class LoadingProvider extends React.Component<
       },
       () => {
         cb && cb()
+        /**
+         * Reset modal state
+         */
         setTimeout(() => {
           this.setState({
             ...DEFAULT_STATE

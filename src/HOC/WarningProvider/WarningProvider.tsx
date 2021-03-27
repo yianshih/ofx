@@ -2,9 +2,9 @@ import React from "react"
 import { Button, Modal, ModalProps } from "antd"
 import WarningManager from "./WarningManager"
 
-export interface OverlayProps {
+export interface WarningProps {
   /**
-   * @param content Overlay Content to display
+   * @param content Default Content to display
    */
   content: JSX.Element | null
   /**
@@ -13,15 +13,28 @@ export interface OverlayProps {
   modalProps?: Partial<ModalProps>
 }
 
+/**
+ * @showModal Value to decide modal show or hide
+ * @content Custom loading content
+ * @title Custom title on top
+ * @modalProps Props for Modal component
+ * @onClose Function on clicking top right close button
+ * @onOK  Function on clicking OK button
+ */
 export interface WarningState {
   showModal: boolean
   content?: JSX.Element | null
-  title?:string
+  title?: string
   modalProps?: Partial<ModalProps> | null
   onClose?: () => void
   onOK?: () => void
 }
 
+/**
+ * Function to show current modal
+ * @param args Args pass to showModal function,please refs to showModal function
+ * @param cb Callback function pass to showModal
+ */
 export function showWarning(args?: Partial<WarningState>, cb?: () => void) {
   const ref = WarningManager.getDefault()
   if (!!ref) {
@@ -29,6 +42,10 @@ export function showWarning(args?: Partial<WarningState>, cb?: () => void) {
   }
 }
 
+/**
+ * Function to hide current modal
+ * @param cb Callback function pass to showModal
+ */
 export function hideWarning(cb?: () => void) {
   const ref = WarningManager.getDefault()
   if (!!ref) {
@@ -36,6 +53,9 @@ export function hideWarning(cb?: () => void) {
   }
 }
 
+/**
+ * Generate random id
+ */
 function srid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -62,7 +82,7 @@ const DEFAULT_STATE: WarningState = {
  */
 
 export default class WanringProvider extends React.Component<
-  OverlayProps,
+  WarningProps,
   WarningState
 > {
   static defaultProps = {
@@ -87,12 +107,19 @@ export default class WanringProvider extends React.Component<
     }
   }
 
+  /**
+   * Bind this provider component to loading manager
+   */
   componentDidMount() {
     //@ts-ignore
     if (this.props.canRegisterAsDefault) {
       WarningManager.register(this)
     }
   }
+
+  /**
+   * Unbind this provider component to loading manager
+   */
   componentWillUnmount() {
     //@ts-ignore
     if (this.props.canRegisterAsDefault) {
@@ -100,6 +127,11 @@ export default class WanringProvider extends React.Component<
     }
   }
 
+  /**
+   * Function to show modal
+   * @param args Args to custom content,title, onClose,onOK or modal Props
+   * @param cb Callback function after modal has shown
+   */
   showModal(args?: Partial<WarningState>, cb?: () => void) {
     this.setState(
       {
@@ -111,6 +143,10 @@ export default class WanringProvider extends React.Component<
     )
   }
 
+  /**
+   * Function to hide modal
+   * @param cb Callback function after modal has hidden
+   */
   hideModal(cb?: () => void) {
     this.setState(
       {
@@ -137,8 +173,6 @@ export default class WanringProvider extends React.Component<
       onClose
     }: WarningState = this.state
 
-    // console.log("this.props : ", this.props)
-
     return (
       <Modal
         title={title || "Warning"}
@@ -152,7 +186,6 @@ export default class WanringProvider extends React.Component<
             OK
           </Button>
         ]}
-        
         onCancel={() => (onClose ? onClose() : this.hideModal())}
         {...modalProps}
       >

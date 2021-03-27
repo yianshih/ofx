@@ -27,14 +27,35 @@ export type FormInputProps = {
   label?: string
   rules?: RegisterOptions
   error?: FieldError
-  onChangeText?: (value: any) => void
   defaultValue?: string | null | number
   placeholder?: string
   inputProps?: Partial<InputProps>
   selectProps?: Partial<SelectProps<any>>
   inputNumberProps?: Partial<InputNumberProps>
+  onChangeText?: (value: any) => void
   renderValue?: (value: string) => any
 }
+
+/**
+ *
+ * @param inputType
+ * inputNumber - for number input only
+ * select - for dropdown select, replace data in children, please ref to Antd Select
+ * input - general input
+ *
+ * @error For displaying error message
+ * @label Label placed on top of input
+ * @style Style for input,select,inputNumber component
+ * @containerStyle Style for input wrapper
+ * @isRequired Displaying red star when it is true
+ * @defaultValue Default value for input
+ * @placeholder Text to display when value is empty
+ * @inputProps Props for Input component
+ * @inputNumberProps Props for InputNumber component
+ * @selectProps Props for Select component
+ * @onChangeText Callback function when input changed
+ * @renderValue Only works when inputType is input, a function to render value
+ */
 
 const FormInput: React.FC<FormInputProps> = ({
   inputType = "input",
@@ -44,11 +65,11 @@ const FormInput: React.FC<FormInputProps> = ({
   containerStyle,
   isRequired,
   defaultValue,
-  onChangeText,
   placeholder,
   inputProps,
   inputNumberProps,
   selectProps,
+  onChangeText,
   renderValue,
   children,
   ...conrollerProps
@@ -79,6 +100,7 @@ const FormInput: React.FC<FormInputProps> = ({
       case "select":
         return (
           <Select
+            ref={ref}
             showSearch
             style={{
               ...(error ? styles.inputError : {}),
@@ -86,14 +108,14 @@ const FormInput: React.FC<FormInputProps> = ({
             }}
             placeholder={placeholder}
             optionFilterProp="children"
-            onChange={(value, option) => {
+            onChange={(value) => {
               onChange(value)
               onChangeText && onChangeText(value)
             }}
-            // value={value}
             filterOption={(input, option) =>
               option?.children?.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
+            defaultValue={defaultValue}
             {...selectProps}
           >
             {children}
@@ -105,7 +127,10 @@ const FormInput: React.FC<FormInputProps> = ({
             ref={ref}
             defaultValue={defaultValue || ""}
             formatter={(value) =>
-              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              /**
+               * Format value as amount (For example : 100,000)
+               */
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") 
             }
             style={{
               ...(error ? styles.inputError : {}),
@@ -157,7 +182,6 @@ const styles: StyleSheet = {
     minWidth: "150px",
     marginTop: "10px",
     marginBottom: "10px"
-    //marginRight: "20px"
   },
   labelContainer: {
     position: "relative",

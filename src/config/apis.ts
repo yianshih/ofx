@@ -9,6 +9,9 @@ enum ENV {
  */
 export const env: ENV = ENV.dev
 
+/**
+ * API to fetch individual quote data
+ */
 const IndividualURLs = {
   prod: "",
   staging: "",

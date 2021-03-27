@@ -8,6 +8,9 @@ import {
 } from "../../constant/regex"
 import { QuickQuoteFormType } from "../../redux/QuickQuote/reducer"
 
+/**
+ * Fields for FormInputProps
+ */
 interface ConfigFieldType extends Omit<FormInputProps, "control"> {
   name: keyof QuickQuoteFormType
   label?: string | undefined

@@ -41,6 +41,9 @@ const QuickQuoteForm: React.FC = () => {
   const { quickQuote, data, reset } = useQuote()
 
   const getQuote = (data: QuickQuoteFormType) => {
+    /**
+     * Avoiding selcted two same Currencies
+     */
     if (data?.fromCurrency === data?.toCurrency) {
       setError("toCurrency", {
         shouldFocus: true,
@@ -55,16 +58,29 @@ const QuickQuoteForm: React.FC = () => {
         )
       })
     }
+    /**
+     * Fetching Quote data
+     */
     quickQuote(data?.fromCurrency, data?.toCurrency, data?.amount)
+    /**
+     * Store form data to redux
+     */
     dispatch(setQuickQuoteForm({ ...data }))
   }
 
+  /**
+   * Return Common Props for FormInput
+   * @param key Input field
+   */
   const getCommonProps = (key: keyof QuickQuoteFormType): FormInputProps => ({
     control: control,
     error: errors[key],
     ...quickQuoteConfig[key]
   })
 
+  /**
+   * Render Quick Quote result after data is fetched
+   */
   if (data) {
     return (
       <QuickQuoteResult
@@ -114,7 +130,6 @@ const QuickQuoteForm: React.FC = () => {
               addonBefore: (
                 <Select defaultValue="+61" className="select-before">
                   <Option value="+61">+61</Option>
-                  <Option value="+886">+886</Option>
                 </Select>
               )
             }}
@@ -130,7 +145,6 @@ const QuickQuoteForm: React.FC = () => {
               <FormInput
                 {...getCommonProps(item)}
                 defaultValue={reduxForm[item]}
-                selectProps={{ defaultValue: reduxForm[item] }}
               >
                 {CURRENCIES.map((currency) => (
                   <Option
@@ -169,7 +183,6 @@ const styles: StyleSheet = {
     minWidth: "200px",
     flexWrap: "wrap",
     display: "flex"
-    //paddingRight: "20px"
   },
   container: {
     flexDirection: "row",

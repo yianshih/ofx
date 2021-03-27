@@ -20,12 +20,12 @@ const WelcomePage = () => {
           <Text style={styles.welcomeText}>Welcome to</Text>
           <Image
             src={LogoNameImage}
-            style={{ width: "100px", marginLeft: "10px" }}
+            style={{ width: "100px", height: "37px", marginLeft: "10px" }}
           />
         </View>
         <View style={{ marginTop: "20px" }}>
           <View
-          onClick={()=>history.push("quickQuote")}
+            onClick={() => history.push("quickQuote")}
             className="startButton"
             style={{ ...commonStyles.centerView, ...styles.startButton }}
           >
