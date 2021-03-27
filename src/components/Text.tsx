@@ -12,7 +12,7 @@ const Text: React.FC<TextProps> = ({ children, ...props }) => {
       style={{
         color: black,
         fontSize: "20px",
-        lineHeight:"20px",
+        // lineHeight:"20px",
         marginBottom: "0px",
         ...props?.style
       }}

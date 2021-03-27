@@ -15,6 +15,7 @@ const Sheet: React.FC<SheetProps> = ({ style, children }) => {
         paddingTop: "25px",
         paddingLeft: "25px",
         paddingRight: "25px",
+        paddingBottom:"25px",
         ...style
       }}
     >

@@ -1,6 +1,7 @@
 import React from "react"
 import { Button, ButtonProps } from "antd"
 import { blue } from "../../constant/colors"
+import Text from "../Text"
 
 const QuoteButton: React.FC<ButtonProps> = ({ ...props }) => {
   return (
@@ -8,13 +9,14 @@ const QuoteButton: React.FC<ButtonProps> = ({ ...props }) => {
       shape="round"
       {...props}
       style={{
-        height: "50px",
-        color: "white",
+        height: "40px",
         backgroundColor: blue,
         ...props?.style
       }}
     >
-      {props?.children}
+      <Text style={{ fontSize: "12px", color: "white" }}>
+        {props?.children}
+      </Text>
     </Button>
   )
 }

@@ -7,7 +7,7 @@ import QuickQuoteForm from "./QuickQuoteForm"
 const QuickQuotePage = () => {
   return (
     <Layout>
-      <View style={{ width: "80%", alignSelf: "center", marginTop: "10%" }}>
+      <View style={{ width: "80%", alignSelf: "center", marginTop: "5%" }}>
         <Section title="Quick Quote">
           <QuickQuoteForm />
         </Section>

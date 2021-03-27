@@ -1,12 +1,14 @@
+export type CurrencyType = "AUD" | "EUR" | "GBP" | "JPY" | "USD"
+
 /**
  * @param key: Value for searching
  * @param desc: Currency description
  */
-export interface CurrencyType {
-  key: string
+export interface CurrencyDataType {
+  key: CurrencyType
   desc: string
 }
-export const CURRENCIES: CurrencyType[] = [
+export const CURRENCIES: CurrencyDataType[] = [
   {
     key: "AUD",
     desc: "Australian Dollar"

@@ -27,7 +27,8 @@ export type FormInputProps = {
   label?: string
   rules?: RegisterOptions
   error?: FieldError
-  defaultValue?: string | number
+  onChangeText?: (value: any) => void
+  defaultValue?: string | null | number
   placeholder?: string
   inputProps?: Partial<InputProps>
   selectProps?: Partial<SelectProps<any>>
@@ -43,6 +44,7 @@ const FormInput: React.FC<FormInputProps> = ({
   containerStyle,
   isRequired,
   defaultValue,
+  onChangeText,
   placeholder,
   inputProps,
   inputNumberProps,
@@ -63,7 +65,10 @@ const FormInput: React.FC<FormInputProps> = ({
             ref={ref}
             placeholder={placeholder}
             value={renderValue ? renderValue(value) : value}
-            onChange={(e) => onChange(e)}
+            onChange={(e) => {
+              onChange(e)
+              onChangeText && onChangeText(e)
+            }}
             style={{
               ...(error ? styles.inputError : {}),
               ...style
@@ -81,7 +86,11 @@ const FormInput: React.FC<FormInputProps> = ({
             }}
             placeholder={placeholder}
             optionFilterProp="children"
-            onChange={(value, option) => onChange(value)}
+            onChange={(value, option) => {
+              onChange(value)
+              onChangeText && onChangeText(value)
+            }}
+            // value={value}
             filterOption={(input, option) =>
               option?.children?.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
@@ -94,7 +103,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <InputNumber
             ref={ref}
-            defaultValue={defaultValue}
+            defaultValue={defaultValue || ""}
             formatter={(value) =>
               `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             }
@@ -103,7 +112,10 @@ const FormInput: React.FC<FormInputProps> = ({
               ...style
             }}
             parser={(value) => value?.replace(/\$\s?|(,*)/g, "") || ""}
-            onChange={onChange}
+            onChange={(value) => {
+              onChange(value)
+              onChangeText && onChangeText(value)
+            }}
             {...inputNumberProps}
           />
         )

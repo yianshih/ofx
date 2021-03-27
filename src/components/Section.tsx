@@ -12,7 +12,7 @@ interface SectionProps {
 const Section: React.FC<SectionProps> = ({ title, children }) => {
   return (
     <View>
-      <Text style={{ fontSize: "30px", color: "#5e5d5f" }}>{title}</Text>
+      <Text style={{ fontSize: "3vw", color: "#5e5d5f" }}>{title}</Text>
       <Divider
         style={{
           marginTop: "15px",

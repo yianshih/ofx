@@ -1,5 +1,6 @@
 import actionTypes from "./actions"
 import { Action } from "../../../types"
+import { CurrencyType } from "../../data/currency"
 
 export type QuickQuoteFormFieldType = keyof QuickQuoteFormType
 export interface QuickQuoteFormType {
@@ -7,8 +8,8 @@ export interface QuickQuoteFormType {
   lastName: string | null
   email: string | null
   phone: string | null
-  fromCurrency: string | null
-  toCurrency: string | null
+  fromCurrency: CurrencyType | null
+  toCurrency: CurrencyType | null
   amount: number | null
 }
 

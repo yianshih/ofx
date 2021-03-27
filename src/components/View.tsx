@@ -11,7 +11,7 @@ const View: React.FC<ViewProps> = ({ children, ...props }) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "white",
+        backgroundColor: "transparent",
         ...props?.style
       }}
     >

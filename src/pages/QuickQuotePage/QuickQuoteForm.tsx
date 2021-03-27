@@ -1,34 +1,62 @@
 import { Select } from "antd"
 import React from "react"
 import { useForm } from "react-hook-form"
+import { useDispatch } from "react-redux"
 import { StyleSheet } from "../../../types"
 import FormInput, { FormInputProps } from "../../components/Form/FormInput"
 import QuoteButton from "../../components/QuickQuote/QuoteButton"
 import Sheet from "../../components/Sheet"
+import Text from "../../components/Text"
 import View from "../../components/View"
+import { red } from "../../constant/colors"
+import { errorMessages } from "../../constant/errorMessages"
 import { CURRENCIES } from "../../data/currency"
+import { showWarning } from "../../HOC/WarningProvider/WarningProvider"
+import { useQuote } from "../../hooks/useQuote"
 import {
   QuickQuoteFormFieldType,
   QuickQuoteFormType
 } from "../../redux/QuickQuote/reducer"
 import { quickQuoteConfig } from "./QuickFormConfig"
+import QuickQuoteResult from "./QuickQuoteResult"
+import { setQuickQuoteForm } from "../../redux/QuickQuote/actions"
+import { useQuickQuoteRedux } from "../../hooks/useRedux"
 
 const { Option } = Select
 
 const DEFAULT_AMOUNT: number = 1000
 
-const QuickQuoteForm = () => {
+const QuickQuoteForm: React.FC = () => {
+  const dispatch = useDispatch()
+  const { formData: reduxForm } = useQuickQuoteRedux()
   const {
     control,
     errors,
-    setValue,
+    setError,
     handleSubmit
   } = useForm<QuickQuoteFormType>({
     mode: "onChange"
   })
 
+  const { quickQuote, data, reset } = useQuote()
+
   const getQuote = (data: QuickQuoteFormType) => {
-    console.log("data : ", data)
+    if (data?.fromCurrency === data?.toCurrency) {
+      setError("toCurrency", {
+        shouldFocus: true,
+        message: errorMessages?.sameCurrencyError
+      })
+      return showWarning({
+        title: "Error",
+        content: (
+          <Text style={{ fontSize: "14px", color: red }}>
+            {errorMessages?.sameCurrencyError}
+          </Text>
+        )
+      })
+    }
+    quickQuote(data?.fromCurrency, data?.toCurrency, data?.amount)
+    dispatch(setQuickQuoteForm({ ...data }))
   }
 
   const getCommonProps = (key: keyof QuickQuoteFormType): FormInputProps => ({
@@ -36,6 +64,25 @@ const QuickQuoteForm = () => {
     error: errors[key],
     ...quickQuoteConfig[key]
   })
+
+  if (data) {
+    return (
+      <QuickQuoteResult
+        data={{
+          rate: data?.CustomerRate || null,
+          fromCurrency: {
+            type: data?.fromCurrency,
+            amount: data?.amount
+          },
+          toCurrency: {
+            type: data?.toCurrency,
+            amount: data?.CustomerAmount || null
+          }
+        }}
+        onRestart={() => reset()}
+      />
+    )
+  }
 
   return (
     <Sheet style={styles.sheet}>
@@ -46,16 +93,23 @@ const QuickQuoteForm = () => {
               style={{ flex: 1, marginRight: index ? "0px" : "20px" }}
               key={item}
             >
-              <FormInput {...getCommonProps(item)} />
+              <FormInput
+                {...getCommonProps(item)}
+                defaultValue={reduxForm[item]}
+              />
             </View>
           )
         )}
         <View style={{ width: "100%" }}>
-          <FormInput {...getCommonProps("email")} />
+          <FormInput
+            {...getCommonProps("email")}
+            defaultValue={reduxForm?.email}
+          />
         </View>
         <View style={{ width: "100%" }}>
           <FormInput
             {...getCommonProps("phone")}
+            defaultValue={reduxForm?.phone}
             inputProps={{
               addonBefore: (
                 <Select defaultValue="+61" className="select-before">
@@ -73,12 +127,16 @@ const QuickQuoteForm = () => {
               style={{ flex: 1, marginRight: index ? "0px" : "20px" }}
               key={item}
             >
-              <FormInput {...getCommonProps(item)}>
+              <FormInput
+                {...getCommonProps(item)}
+                defaultValue={reduxForm[item]}
+                selectProps={{ defaultValue: reduxForm[item] }}
+              >
                 {CURRENCIES.map((currency) => (
                   <Option
                     key={currency?.key}
                     value={currency?.key}
-                  >{`${currency?.key} ${currency?.desc}`}</Option>
+                  >{`${currency?.key} - ${currency?.desc}`}</Option>
                 ))}
               </FormInput>
             </View>
@@ -89,7 +147,7 @@ const QuickQuoteForm = () => {
             <FormInput
               {...getCommonProps("amount")}
               inputType="inputNumber"
-              defaultValue={DEFAULT_AMOUNT}
+              defaultValue={reduxForm?.amount || DEFAULT_AMOUNT}
             />
           </View>
         </View>
