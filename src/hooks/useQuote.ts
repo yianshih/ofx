@@ -8,12 +8,10 @@ import {
   showLoading
 } from "../HOC/LoadingProvider/LoadingProvider"
 
-
 /**
  * useQuote - Hook for fetching Quote data
  */
 export const useQuote = () => {
- 
   const [data, setData] = useState<QuoteResponseType | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(null)
@@ -28,8 +26,8 @@ export const useQuote = () => {
   }
 
   /**
-   * 
-   * @param from Currency to exchange from 
+   *
+   * @param from Currency to exchange from
    * @param to Currency to exchange to
    * @param amount Amount to exchange
    * @param cb Callback function after fetch quote
@@ -42,23 +40,31 @@ export const useQuote = () => {
     cb?: (data: QuoteResponseType) => void,
     onError?: () => void
   ) => {
+    reset()
     setLoading(true)
     showLoading()
-    const res = await get(
-      `${INDIVIDUAL_RATE_API_URL}/${from}/${to}/${amount}?format=json`
-    )
-    setLoading(false)
-    hideLoading()
-    const resData: QuoteResponseType = res?.data
-    if (resData && res?.status === 200) {
-      setData({
-        ...resData,
-        fromCurrency: from,
-        toCurrency: to,
-        amount
+    try {
+      const res = await get(
+        `${INDIVIDUAL_RATE_API_URL}/${from}/${to}/${amount}?format=json`
+      ).finally(() => {
+        hideLoading()
+        setLoading(false)
       })
-      cb && cb(resData)
-    } else {
+
+      const resData: QuoteResponseType = res?.data
+      if (resData && res?.status === 200) {
+        setData({
+          ...resData,
+          fromCurrency: from,
+          toCurrency: to,
+          amount
+        })
+        cb && cb(resData)
+      } else {
+        setError("Failed")
+        onError && onError()
+      }
+    } catch (error) {
       setError("Failed")
       onError && onError()
     }

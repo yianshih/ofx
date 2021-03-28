@@ -30,6 +30,7 @@ interface ConfigType {
 
 export const quickQuoteConfig: ConfigType = {
   firstName: {
+    id: "firstName",
     isRequired: true,
     name: "firstName",
     label: "First Name",
@@ -39,6 +40,7 @@ export const quickQuoteConfig: ConfigType = {
     placeholder: "First Name"
   },
   lastName: {
+    id: "lastName",
     isRequired: true,
     name: "lastName",
     label: "Last Name",
@@ -48,6 +50,7 @@ export const quickQuoteConfig: ConfigType = {
     placeholder: "Last Name"
   },
   email: {
+    id: "email",
     name: "email",
     label: "Email",
     rules: {
@@ -59,6 +62,7 @@ export const quickQuoteConfig: ConfigType = {
     placeholder: "Email"
   },
   phone: {
+    id: "phone",
     name: "phone",
     label: "Telephone / Mobile",
     rules: {
@@ -70,6 +74,7 @@ export const quickQuoteConfig: ConfigType = {
     placeholder: "Telephone / Mobile"
   },
   fromCurrency: {
+    id: "fromCurrency",
     isRequired: true,
     name: "fromCurrency",
     label: "From Currency",
@@ -80,6 +85,7 @@ export const quickQuoteConfig: ConfigType = {
     inputType: "select"
   },
   toCurrency: {
+    id: "toCurrency",
     isRequired: true,
     name: "toCurrency",
     label: "To Currency",
@@ -90,6 +96,7 @@ export const quickQuoteConfig: ConfigType = {
     inputType: "select"
   },
   amount: {
+    id: "amount",
     isRequired: true,
     name: "amount",
     label: "Amount",

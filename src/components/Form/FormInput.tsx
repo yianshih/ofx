@@ -17,6 +17,7 @@ import View from "../View"
 export type FormInputType = "input" | "select" | "inputNumber"
 
 export type FormInputProps = {
+  id:string
   name: string
   control: any
   children?: any
@@ -58,6 +59,7 @@ export type FormInputProps = {
  */
 
 const FormInput: React.FC<FormInputProps> = ({
+  id,
   inputType = "input",
   error,
   label,
@@ -84,6 +86,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <Input
             ref={ref}
+            id={id}
             placeholder={placeholder}
             value={renderValue ? renderValue(value) : value}
             onChange={(e) => {
@@ -100,6 +103,7 @@ const FormInput: React.FC<FormInputProps> = ({
       case "select":
         return (
           <Select
+            id={id}
             ref={ref}
             showSearch
             style={{
@@ -124,6 +128,7 @@ const FormInput: React.FC<FormInputProps> = ({
       case "inputNumber":
         return (
           <InputNumber
+            id={id}
             ref={ref}
             defaultValue={defaultValue || ""}
             formatter={(value) =>

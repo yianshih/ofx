@@ -1,3 +1,6 @@
+/*
+  Spinning from 0 deg to 360 deg in 3 seconds
+*/
 .spinning {
   animation-name: spin;
   animation-duration: 3000ms;

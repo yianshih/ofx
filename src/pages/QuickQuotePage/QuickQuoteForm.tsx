@@ -1,5 +1,5 @@
 import { Select } from "antd"
-import React from "react"
+import React, { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch } from "react-redux"
 import { StyleSheet } from "../../../types"
@@ -38,7 +38,18 @@ const QuickQuoteForm: React.FC = () => {
     mode: "onChange"
   })
 
-  const { quickQuote, data, reset } = useQuote()
+  const { quickQuote, data, reset, error } = useQuote()
+
+  useEffect(() => {
+    if (error) {
+      showWarning({
+        title: "Error",
+        content: (
+          <Text style={{ color: red }}>{errorMessages?.requestFailed}</Text>
+        )
+      })
+    }
+  }, [error])
 
   const getQuote = (data: QuickQuoteFormType) => {
     /**
@@ -73,6 +84,7 @@ const QuickQuoteForm: React.FC = () => {
    * @param key Input field
    */
   const getCommonProps = (key: keyof QuickQuoteFormType): FormInputProps => ({
+    
     control: control,
     error: errors[key],
     ...quickQuoteConfig[key]
@@ -148,6 +160,7 @@ const QuickQuoteForm: React.FC = () => {
               >
                 {CURRENCIES.map((currency) => (
                   <Option
+                    id={`${item}_${currency?.key}`}
                     key={currency?.key}
                     value={currency?.key}
                   >{`${currency?.key} - ${currency?.desc}`}</Option>
@@ -161,6 +174,7 @@ const QuickQuoteForm: React.FC = () => {
             <FormInput
               {...getCommonProps("amount")}
               inputType="inputNumber"
+              style={{ width: "50%" }}
               defaultValue={reduxForm?.amount || DEFAULT_AMOUNT}
             />
           </View>
@@ -168,6 +182,7 @@ const QuickQuoteForm: React.FC = () => {
       </View>
       <View style={{ alignItems: "center" }}>
         <QuoteButton
+          id="submitButton"
           style={{ width: "150px" }}
           onClick={handleSubmit(getQuote)}
         >
