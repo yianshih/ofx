@@ -16,7 +16,7 @@
 
 3. Run Cypress Test
 
-### `yarn run cypress:open`
+### `yarn run cypress:open or npm run cypress:open`
 
 
 
